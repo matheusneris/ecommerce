@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity(name = "TB_PRODUTOS")
 @Getter
@@ -18,7 +17,7 @@ public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID        id;
+    private Long        id;
     private String      nome;
     private String      fabricante;
     private BigDecimal  precoDeAquisicao;

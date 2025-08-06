@@ -1,5 +1,6 @@
 package com.shopping.ecommerce.pedido;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shopping.ecommerce.produto.Produto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity(name = "TB_PEDIDO_ITEM")
 @Getter
@@ -19,12 +19,12 @@ public class PedidoItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID        id;
+    private Long        id;
     @ManyToOne
+    @JsonBackReference
     private Pedido      pedido;
     @ManyToOne
     private Produto     produto;
     private BigDecimal  precoUnitario;
     private Integer     quantidade;
-
 }

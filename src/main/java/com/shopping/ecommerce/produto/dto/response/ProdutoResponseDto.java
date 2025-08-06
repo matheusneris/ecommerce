@@ -1,16 +1,12 @@
-package com.shopping.ecommerce.produto.dtos.response;
+package com.shopping.ecommerce.produto.dto.response;
 
 import com.shopping.ecommerce.produto.Produto;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProdutoResponseDto {
 
-    private UUID        id;
+    private Long        id;
     private String      nome;
     private String      fabricante;
     private BigDecimal  preco;

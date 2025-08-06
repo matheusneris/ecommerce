@@ -1,42 +1,59 @@
 package com.shopping.ecommerce.pedido;
 
-import com.shopping.ecommerce.pedido.dtos.request.PedidoRequestAlterarDto;
-import com.shopping.ecommerce.pedido.dtos.request.PedidoRequestSalvarDto;
+import com.shopping.ecommerce.pedido.dto.request.*;
+import com.shopping.ecommerce.pedido.producer.PedidoAlteracaoProducer;
+import com.shopping.ecommerce.pedido.producer.PedidoCriacaoProducer;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/pedidos")
 public class PedidoController {
 
     private final PedidoService pedidoService;
+    private final PedidoCriacaoProducer pedidoCriacaoProducer;
+    private final PedidoAlteracaoProducer pedidoAlteracaoProducer;
 
-    public PedidoController(PedidoService pedidoService) {
+    public PedidoController(PedidoService pedidoService, PedidoCriacaoProducer pedidoCriacaoProducer, PedidoAlteracaoProducer pedidoAlteracaoProducer) {
         this.pedidoService = pedidoService;
+        this.pedidoCriacaoProducer = pedidoCriacaoProducer;
+        this.pedidoAlteracaoProducer = pedidoAlteracaoProducer;
     }
 
-    @PostMapping
-    public ResponseEntity criarPedido(@RequestBody @Valid PedidoRequestSalvarDto pedidoRequestSalvarDto) {
-        pedidoService.criarPedido(pedidoRequestSalvarDto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @PostMapping("/cartao-credito")
+    public ResponseEntity criarPedidoCartaoCredito(@RequestBody @Valid PedidoCartaoCreditoRequestDto pedidoDto) {
+
+        PedidoPagamentoDto pedidoPagamento = new PedidoPagamentoDto(pedidoDto.pedido(), pedidoDto.pagamento());
+        pedidoCriacaoProducer.criarPedidoQueue(pedidoPagamento);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+    @PostMapping("/boleto")
+    public ResponseEntity criarPedidoBoleto(@RequestBody @Valid PedidoBoletoRequestDto pedidoDto) {
+
+        PedidoPagamentoDto pedidoPagamento = new PedidoPagamentoDto(pedidoDto.pedido(), pedidoDto.pagamento());
+        pedidoCriacaoProducer.criarPedidoQueue(pedidoPagamento);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @PatchMapping("/{idPedido}")
-    public ResponseEntity alterarPedido(@PathVariable UUID idPedido, @RequestBody @Valid PedidoRequestAlterarDto pedidoRequestAlterarDto){
-        return ResponseEntity.status(HttpStatus.OK).body(pedidoService.alterarPedidoPorId(idPedido, pedidoRequestAlterarDto));
+    public ResponseEntity alterarPedido(@PathVariable Long idPedido, @RequestBody @Valid PedidoRequestAlterarDto pedidoRequestAlterarDto){
+        PedidoRequestAlterarDto pedidoComId = new PedidoRequestAlterarDto(
+                idPedido, pedidoRequestAlterarDto.nomeCliente(),
+                pedidoRequestAlterarDto.emailCliente(), pedidoRequestAlterarDto.itens());
+        pedidoAlteracaoProducer.alterarPedidoQueue(pedidoComId);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @GetMapping("/{idPedido}")
-    public ResponseEntity buscarPedido(@PathVariable UUID idPedido) {
-        return ResponseEntity.status(HttpStatus.OK).body(pedidoService.buscarPedidoPorId(idPedido));
+    public ResponseEntity buscarPedido(@PathVariable Long idPedido) {
+        return ResponseEntity.status(HttpStatus.OK).body(pedidoService.buscarPedidoResponsePorId(idPedido));
     }
 
     @DeleteMapping("/{idPedido}")
-    public ResponseEntity deletarPedido(@PathVariable UUID idPedido) {
+    public ResponseEntity deletarPedido(@PathVariable Long idPedido) {
         pedidoService.deletarPedidoPorId(idPedido);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

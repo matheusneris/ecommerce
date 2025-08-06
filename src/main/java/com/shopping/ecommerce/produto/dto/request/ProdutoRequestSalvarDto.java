@@ -1,7 +1,6 @@
-package com.shopping.ecommerce.produto.dtos.request;
+package com.shopping.ecommerce.produto.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;

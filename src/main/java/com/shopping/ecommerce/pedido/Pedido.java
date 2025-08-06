@@ -1,5 +1,9 @@
 package com.shopping.ecommerce.pedido;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.shopping.ecommerce.pagamento.Pagamento;
+import com.shopping.ecommerce.pedido.enums.PedidoStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +14,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity(name = "TB_PEDIDOS")
 @Getter
@@ -21,10 +24,17 @@ public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID            id;
-    private LocalDateTime   dataHoraPedido;
-    private BigDecimal      valorPedido;
+    private Long                id;
+    private LocalDateTime       dataHoraPedido;
+    private BigDecimal          valorPedido;
+    private String              nomeCliente;
+    private String              emailCliente;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PedidoItem> itens = new ArrayList<>();
-
+    @JsonManagedReference
+    private List<PedidoItem>    itens = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private PedidoStatusEnum    statusPedido;
+    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Pagamento           pagamento;
 }

@@ -3,15 +3,16 @@ package com.shopping.ecommerce.produto;
 import com.shopping.ecommerce.exception.ProdutoNaoEncontradoException;
 import com.shopping.ecommerce.exception.ProdutoSemEstoqueSuficienteException;
 import com.shopping.ecommerce.exception.QuantidadeProdutoNegativaException;
-import com.shopping.ecommerce.produto.dtos.request.ProdutoRequestAlterarDto;
-import com.shopping.ecommerce.produto.dtos.request.ProdutoRequestSalvarDto;
-import com.shopping.ecommerce.produto.dtos.response.ProdutoResponseDto;
-import jakarta.transaction.Transactional;
+import com.shopping.ecommerce.produto.dto.request.AdicionarEstoqueDto;
+import com.shopping.ecommerce.produto.dto.request.ProdutoRequestAlterarDto;
+import com.shopping.ecommerce.produto.dto.request.ProdutoRequestSalvarDto;
+import com.shopping.ecommerce.produto.dto.request.RetirarEstoqueDto;
+import com.shopping.ecommerce.produto.dto.response.ProdutoResponseDto;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 @Service
@@ -36,14 +37,14 @@ public class ProdutoService {
     }
 
     //Usado para criar novos pedidos
-    public Produto consultarProdutoPorId(UUID id){
+    public Produto consultarProdutoPorId(Long id){
         Produto produto = repository.findById(id).orElseThrow(
                 () -> new ProdutoNaoEncontradoException(id));
         return produto;
     }
 
     //Usado para consulta externa de produtos
-    public ProdutoResponseDto buscarProdutoPorId(UUID id) {
+    public ProdutoResponseDto buscarProdutoPorId(Long id) {
         Produto produto = repository.findById(id).orElseThrow(
                 () -> new ProdutoNaoEncontradoException(id));
 
@@ -63,13 +64,13 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void deletarProdutoPorId(UUID id) {
+    public void deletarProdutoPorId(Long id) {
         repository.findById(id).orElseThrow(() -> new ProdutoNaoEncontradoException(id));
         repository.deleteById(id);
     }
 
     @Transactional
-    public Produto alterarProdutoPorId(UUID id, ProdutoRequestAlterarDto produtoRequestAlterarDto) {
+    public Produto alterarProdutoPorId(Long id, ProdutoRequestAlterarDto produtoRequestAlterarDto) {
         Produto produto = repository.findById(id)
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
@@ -83,29 +84,34 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void retirarItensProdutoEstoque(UUID id , Integer quantidadeItensProduto) {
-        if(quantidadeItensProduto < 0) {
-            throw new QuantidadeProdutoNegativaException(id);
-        }
-        Produto produto = repository.findById(id)
-                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
-        if(produto.getQuantidadeEstoque() < quantidadeItensProduto) {
-            throw new ProdutoSemEstoqueSuficienteException(produto.getNome(), produto.getId(), produto.getQuantidadeEstoque());
-        } else {
-            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - quantidadeItensProduto);
-            repository.save(produto);
+    public void retirarItensProdutoEstoque(List<RetirarEstoqueDto> produtos) {
+        for(RetirarEstoqueDto item : produtos) {
+            if(item.quantidade() < 0) {
+                throw new QuantidadeProdutoNegativaException(item.idProduto());
+            }
+            Produto produto = repository.findById(item.idProduto())
+                    .orElseThrow(() -> new ProdutoNaoEncontradoException(item.idProduto()));
+            if(produto.getQuantidadeEstoque() < item.quantidade()) {
+                throw new ProdutoSemEstoqueSuficienteException(produto.getNome(), produto.getId(), produto.getQuantidadeEstoque());
+            } else {
+                produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - item.quantidade());
+                repository.save(produto);
+            }
         }
     }
 
     @Transactional
-    public void adicionarItensProdutoEstoque(UUID id , Integer quantidadeItensProduto) {
-        if(quantidadeItensProduto < 0) {
-            throw new QuantidadeProdutoNegativaException(id);
-        }
-        Produto produto = repository.findById(id)
-                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
-            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + quantidadeItensProduto);
+    public void adicionarItensProdutoEstoque(List<AdicionarEstoqueDto> produtos) {
+        for(AdicionarEstoqueDto item : produtos){
+            if(item.quantidade() < 0) {
+                throw new QuantidadeProdutoNegativaException(item.idProduto());
+            }
+
+            Produto produto = repository.findById(item.idProduto())
+                    .orElseThrow(() -> new ProdutoNaoEncontradoException(item.idProduto()));
+            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + item.quantidade());
             repository.save(produto);
+        }
     }
 
     private <T> void setIfNotNull(Consumer<T> setter, T value) {

@@ -6,6 +6,7 @@ import com.shopping.ecommerce.pedido.producer.PedidoCriacaoProducer;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -53,6 +54,7 @@ public class PedidoController {
     }
 
     @DeleteMapping("/{idPedido}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity deletarPedido(@PathVariable Long idPedido) {
         pedidoService.deletarPedidoPorId(idPedido);
         return ResponseEntity.status(HttpStatus.OK).build();

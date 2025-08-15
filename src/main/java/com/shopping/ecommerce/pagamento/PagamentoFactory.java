@@ -1,6 +1,6 @@
 package com.shopping.ecommerce.pagamento;
 
-import com.shopping.ecommerce.exception.PagamentoNaoSuportadoException;
+import com.shopping.ecommerce.exception.pagamentoexception.PagamentoNaoSuportadoException;
 import com.shopping.ecommerce.pagamento.dto.PagamentoBoletoDto;
 import com.shopping.ecommerce.pagamento.dto.PagamentoCartaoCreditoDto;
 import com.shopping.ecommerce.pedido.Pedido;

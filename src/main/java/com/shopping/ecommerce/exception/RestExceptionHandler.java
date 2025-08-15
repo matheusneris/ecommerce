@@ -1,12 +1,37 @@
 package com.shopping.ecommerce.exception;
 
+import com.shopping.ecommerce.exception.pagamentoexception.FalhaNaTransacaoException;
+import com.shopping.ecommerce.exception.pagamentoexception.PagamentoInvalidoException;
+import com.shopping.ecommerce.exception.pagamentoexception.PagamentoNaoSuportadoException;
+import com.shopping.ecommerce.exception.pedidoexception.PedidoNaoEncontradoException;
+import com.shopping.ecommerce.exception.produtoexception.ProdutoNaoEncontradoException;
+import com.shopping.ecommerce.exception.produtoexception.ProdutoSemEstoqueSuficienteException;
+import com.shopping.ecommerce.exception.produtoexception.QuantidadeProdutoNegativaException;
+import com.shopping.ecommerce.exception.usuarioexception.UsernameExistenteException;
+import com.shopping.ecommerce.exception.usuarioexception.UsuarioNaoEncontradoException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.mail.MailException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+    @ExceptionHandler(UsuarioNaoEncontradoException.class)
+    public String usuarioNaoEncontrado(UsuarioNaoEncontradoException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(UsernameExistenteException.class)
+    public String usernameExistente(UsernameExistenteException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public String usernameExistente(AccessDeniedException ex) {
+        return ex.getMessage();
+    }
 
     @ExceptionHandler(ProdutoNaoEncontradoException.class)
     public String produtoNaoEncontrado(ProdutoNaoEncontradoException ex) {

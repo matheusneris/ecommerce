@@ -1,4 +1,4 @@
-package com.shopping.ecommerce.exception;
+package com.shopping.ecommerce.exception.produtoexception;
 
 import java.util.UUID;
 

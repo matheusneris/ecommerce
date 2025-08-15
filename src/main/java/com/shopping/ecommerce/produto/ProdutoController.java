@@ -6,6 +6,8 @@ import com.shopping.ecommerce.produto.dto.response.ProdutoResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,16 +33,19 @@ public class ProdutoController {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Produto> salvarProduto(@RequestBody @Valid ProdutoRequestSalvarDto produtoRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.salvarProduto(produtoRequestDto));
     }
 
     @PatchMapping("/alterar-produto/{idProduto}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Produto> alterarProduto(@PathVariable Long idProduto, @RequestBody ProdutoRequestAlterarDto produtoRequestAlterarDto) {
         return ResponseEntity.status(HttpStatus.OK).body(produtoService.alterarProdutoPorId(idProduto, produtoRequestAlterarDto));
     }
 
     @DeleteMapping("/{idProduto}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity deletarProduto(@PathVariable Long idProduto) {
         produtoService.deletarProdutoPorId(idProduto);
         return ResponseEntity.status(HttpStatus.OK).build();

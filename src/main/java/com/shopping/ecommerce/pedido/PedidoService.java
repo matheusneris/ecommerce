@@ -1,9 +1,9 @@
 package com.shopping.ecommerce.pedido;
 
-import com.shopping.ecommerce.exception.PedidoNaoEncontradoException;
-import com.shopping.ecommerce.exception.ProdutoNaoEncontradoException;
-import com.shopping.ecommerce.exception.ProdutoSemEstoqueSuficienteException;
-import com.shopping.ecommerce.exception.QuantidadeProdutoNegativaException;
+import com.shopping.ecommerce.exception.pedidoexception.PedidoNaoEncontradoException;
+import com.shopping.ecommerce.exception.produtoexception.ProdutoNaoEncontradoException;
+import com.shopping.ecommerce.exception.produtoexception.ProdutoSemEstoqueSuficienteException;
+import com.shopping.ecommerce.exception.produtoexception.QuantidadeProdutoNegativaException;
 import com.shopping.ecommerce.pagamento.ProcessaPagamentos;
 import com.shopping.ecommerce.pagamento.producer.ProcessaPagamentosProducer;
 import com.shopping.ecommerce.pedido.dto.request.ItemRequestAlterarDto;

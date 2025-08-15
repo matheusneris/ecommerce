@@ -1,7 +1,7 @@
 package com.shopping.ecommerce.pagamento;
 
-import com.shopping.ecommerce.exception.FalhaNaTransacaoException;
-import com.shopping.ecommerce.exception.PagamentoInvalidoException;
+import com.shopping.ecommerce.exception.pagamentoexception.FalhaNaTransacaoException;
+import com.shopping.ecommerce.exception.pagamentoexception.PagamentoInvalidoException;
 import com.shopping.ecommerce.pagamento.dto.PagamentoBoletoDto;
 import com.shopping.ecommerce.pedido.Pedido;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package com.shopping.ecommerce.produto;
 
-import com.shopping.ecommerce.exception.ProdutoNaoEncontradoException;
-import com.shopping.ecommerce.exception.ProdutoSemEstoqueSuficienteException;
-import com.shopping.ecommerce.exception.QuantidadeProdutoNegativaException;
+import com.shopping.ecommerce.exception.produtoexception.ProdutoNaoEncontradoException;
+import com.shopping.ecommerce.exception.produtoexception.ProdutoSemEstoqueSuficienteException;
+import com.shopping.ecommerce.exception.produtoexception.QuantidadeProdutoNegativaException;
 import com.shopping.ecommerce.produto.dto.request.AdicionarEstoqueDto;
 import com.shopping.ecommerce.produto.dto.request.ProdutoRequestAlterarDto;
 import com.shopping.ecommerce.produto.dto.request.ProdutoRequestSalvarDto;

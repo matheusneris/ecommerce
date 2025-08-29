@@ -1,7 +1,5 @@
 package com.shopping.ecommerce.exception.produtoexception;
 
-import java.util.UUID;
-
 public class QuantidadeProdutoNegativaException extends RuntimeException {
 
     public QuantidadeProdutoNegativaException(Long idProduto) {

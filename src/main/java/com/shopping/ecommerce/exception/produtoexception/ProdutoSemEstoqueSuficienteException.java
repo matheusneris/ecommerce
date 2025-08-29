@@ -1,7 +1,5 @@
 package com.shopping.ecommerce.exception.produtoexception;
 
-import java.util.UUID;
-
 public class ProdutoSemEstoqueSuficienteException extends RuntimeException{
 
     public ProdutoSemEstoqueSuficienteException(String nomeProduto, Long id, Integer quantidadeEstoque){

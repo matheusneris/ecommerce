@@ -1,0 +1,46 @@
+version: "3.9"
+
+networks:
+  ecommerce-net:
+
+volumes:
+  postgres_data:
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${SPRING_DATASOURCE_DBNAME}
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    ports:
+      - ${POSTGRES_PORTS}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - ${RABBITMQ_PORTS}
+      - ${RABBITMQ_MANAGEMENT_PORT}
+    networks:
+      - ecommerce-net
+
+  ecommerce-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce-api
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8080:8080"
+    networks:
+      - ecommerce-net
+    env_file:
+      - .env
